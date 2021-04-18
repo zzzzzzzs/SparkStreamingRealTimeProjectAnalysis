@@ -51,7 +51,7 @@ object DauApp {
         })
 
         //优化：因为多次使用，所以加个缓存
-//        startUpLogDStream.cache()
+        startUpLogDStream.cache()
 
 //        5.跨批次去重
         val filterByRedisDStream: DStream[StartUpLog] = DauHandler.filterByRedis(startUpLogDStream,ssc.sparkContext)
@@ -62,22 +62,22 @@ object DauApp {
         filterByRedisDStream.count().print()
 
         //6.批次内去重
-//        val filterByMidDStream: DStream[StartUpLog] = DauHandler.filterByMid(filterByRedisDStream)
+        val filterByMidDStream: DStream[StartUpLog] = DauHandler.filterByMid(filterByRedisDStream)
         //经过批次内去重后的一个数据条数
-//        filterByMidDStream.cache()
-//        filterByMidDStream.count().print()
+        filterByMidDStream.cache()
+        filterByMidDStream.count().print()
 
         //7.将去重后的结果mid写入redis，方便下个批次的数据做去重
-//        DauHandler.saveMidToRedis(filterByMidDStream)
+        DauHandler.saveMidToRedis(filterByMidDStream)
 
         //8.将去重后的数据写入Hbase
-//        filterByMidDStream.foreachRDD(rdd=>{
-//            rdd.saveToPhoenix(
-//                "GMALL1116_DAU",
-//                Seq("MID", "UID", "APPID", "AREA", "OS", "CH", "TYPE", "VS", "LOGDATE", "LOGHOUR", "TS"),
-//                HBaseConfiguration.create,
-//                Some("hadoop102,hadoop103,hadoop104:2181"))
-//        })
+        filterByMidDStream.foreachRDD(rdd=>{
+            rdd.saveToPhoenix(
+                "GMALL1116_DAU",
+                Seq("MID", "UID", "APPID", "AREA", "OS", "CH", "TYPE", "VS", "LOGDATE", "LOGHOUR", "TS"),
+                HBaseConfiguration.create,
+                Some("hadoop102,hadoop103,hadoop104:2181"))
+        })
 
 //        filterByMidDStream.print()
 
