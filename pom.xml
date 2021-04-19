@@ -13,6 +13,8 @@
         <module>gmall-common</module>
         <module>gmall-realtime</module>
         <module>gmall-publisher</module>
+        <module>dw-chart</module>
+        <module>gmall-canal</module>
     </modules>
 
 

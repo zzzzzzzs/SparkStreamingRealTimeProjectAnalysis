@@ -53,7 +53,13 @@ object DauApp {
         //优化：因为多次使用，所以加个缓存
         startUpLogDStream.cache()
 
-//        5.跨批次去重
+        //5.跨批次去重
+        /*
+        去重不要直接写入到redis里面（虽然redis直接就可以去重），
+        但是后面需要去重后的明细将数据放入到hbase里面。
+        如果不去重，只是将数据放到redis里面去重，那么无法将redis里面的数据直接导入到hbase里面。
+        */
+
         val filterByRedisDStream: DStream[StartUpLog] = DauHandler.filterByRedis(startUpLogDStream,ssc.sparkContext)
         filterByRedisDStream.cache()
         //原始数据条数
