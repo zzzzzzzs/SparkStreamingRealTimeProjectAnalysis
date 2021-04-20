@@ -17,8 +17,6 @@
         <module>gmall-canal</module>
     </modules>
 
-
-
     <properties>
         <spark.version>3.0.0</spark.version>
         <scala.version>2.12.11</scala.version>
@@ -86,11 +84,11 @@
                 <version>${spark.version}</version>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>org.apache.spark</groupId>-->
-<!--                <artifactId>spark-hive_2.12</artifactId>-->
-<!--                <version>${spark.version}</version>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-hive_2.12</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.spark</groupId>
