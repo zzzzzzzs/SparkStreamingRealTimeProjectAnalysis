@@ -12,6 +12,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.Random;
 
 public class CanalClient {
     public static void main(String[] args) throws InvalidProtocolBufferException {
@@ -67,8 +68,6 @@ public class CanalClient {
                     e.printStackTrace();
                 }
             }
-
-
         }
     }
 
@@ -79,21 +78,45 @@ public class CanalClient {
      * @param rowChange
      */
     private static void handler(String tableName, CanalEntry.EventType eventType, CanalEntry.RowChange rowChange) {
+
         //1.根据表名，数据类型来判断需要的是什么数据
         if ("order_info".equals(tableName)&&CanalEntry.EventType.INSERT.equals(eventType)){
             //2.解析反序列后的数据
-            List<CanalEntry.RowData> rowDatasList = rowChange.getRowDatasList();
+            sendToKafka(GmallConstants.KAFKA_TOPIC_ORDER,rowChange);
+            //获取订单详情新增的数据
+        }else if ("order_detail".equals(tableName)&&CanalEntry.EventType.INSERT.equals(eventType)){
+            sendToKafka(GmallConstants.KAFKA_TOPIC_ORDER_DETAIL,rowChange);
+            //获取用户表的新增及变化数据
+        }else if ("user_info".equals(tableName)&&(CanalEntry.EventType.INSERT.equals(eventType)||CanalEntry.EventType.UPDATE.equals(eventType))){
+            sendToKafka(GmallConstants.KAFKA_TOPIC_USER,rowChange);
+        }
+    }
+    
+    /**
+     * @Description: 将常用的方法提取出来
+     * @Param: 
+     * @return: 
+     * @auther: zzzzzzzs
+     * @Date: 2021/4/21
+     */
+    private static void sendToKafka(String topic,CanalEntry.RowChange rowChange) {
+        List<CanalEntry.RowData> rowDatasList = rowChange.getRowDatasList();
 
-            for (CanalEntry.RowData rowData : rowDatasList) {
-                List<CanalEntry.Column> afterColumnsList = rowData.getAfterColumnsList();
-                JSONObject jsonObject = new JSONObject();
-                for (CanalEntry.Column column : afterColumnsList) {
-                    jsonObject.put(column.getName(), column.getValue());
-                }
-                System.out.println(jsonObject.toString());
-                // 使用kafka的生产者发送canal的数据
-                MyKafkaSender.send(GmallConstants.KAFKA_TOPIC_ORDER, jsonObject.toString());
+        for (CanalEntry.RowData rowData : rowDatasList) {
+            List<CanalEntry.Column> afterColumnsList = rowData.getAfterColumnsList();
+            JSONObject jsonObject = new JSONObject();
+            for (CanalEntry.Column column : afterColumnsList) {
+                jsonObject.put(column.getName(), column.getValue());
             }
+            System.out.println(jsonObject.toString());
+            //使用随机数模拟网络延迟的效果
+            try {
+                Thread.sleep(new Random().nextInt(5)*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            // 使用kafka的生产者发送canal封装的数据
+            MyKafkaSender.send(topic, jsonObject.toString());
         }
     }
 }
