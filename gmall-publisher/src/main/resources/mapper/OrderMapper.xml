@@ -8,7 +8,6 @@
 
     <select id="selectOrderAmountHourMap" resultMap="orderAmountHour" >
         select create_hour, cast(sum(total_amount) as double) sum_amount from GMALL1116_ORDER_INFO where create_date=#{date}  group by create_hour
-
     </select>
     <resultMap id="orderAmountHour" type="java.util.Map" autoMapping="true">
     </resultMap>
