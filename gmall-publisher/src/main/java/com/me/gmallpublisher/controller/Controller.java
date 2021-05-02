@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,9 +26,9 @@ public class Controller {
         ArrayList<Map> result = new ArrayList<Map>();
 
         //2.从service层获取处理好的数据
-            //日活数据
+        //日活数据
         Integer dauTotal = publisherService.getDauTotal(date);
-            //GMV数据
+        //GMV数据
         Double gmvTotal = publisherService.getGmvTotal(date);
 
         //3.将数据封装到结果集合中
@@ -66,12 +68,12 @@ public class Controller {
         String yesterday = LocalDate.parse(date).plusDays(-1).toString();
         Map todayMap;
         Map yesterdayMap;
-        if ("dau".equals(id)){
+        if ("dau".equals(id)) {
             //1.获取service层当天数据
             todayMap = publisherService.getDauHour(date);
             //1.2查询昨天的数据
             yesterdayMap = publisherService.getDauHour(yesterday);
-        }else{
+        } else {
             //1.获取service层当天数据
             todayMap = publisherService.getGmvHour(date);
             //1.2查询昨天的数据
@@ -82,9 +84,20 @@ public class Controller {
         HashMap<String, Map> result = new HashMap<>();
 
         //3.往结果集合中封装数据
-        result.put("yesterday",yesterdayMap);
-        result.put("today",todayMap);
+        result.put("yesterday", yesterdayMap);
+        result.put("today", todayMap);
 
         return JSONObject.toJSONString(result);
+    }
+
+
+    @RequestMapping("sale_detail")
+    public String getSaleDetail(
+            @RequestParam("date") String date,
+            @RequestParam("startpage") Integer start,
+            @RequestParam("size") Integer size,
+            @RequestParam("keyword") String keyword
+    ) throws IOException {
+        return publisherService.getSaleDetail(date, start, size, keyword);
     }
 }
