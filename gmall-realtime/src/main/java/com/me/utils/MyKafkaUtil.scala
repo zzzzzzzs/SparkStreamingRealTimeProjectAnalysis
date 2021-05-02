@@ -21,7 +21,7 @@ object MyKafkaUtil {
         "bootstrap.servers" -> broker_list,
         "key.deserializer" -> classOf[StringDeserializer],
         "value.deserializer" -> classOf[StringDeserializer],
-        //消费者组，如果出现消费不出来数据的情况就换一个消费者组
+        //消费者组
         "group.id" -> "bigdata2021aaa",
         //如果没有初始化偏移量或者当前的偏移量不存在任何服务器上，可以使用这个配置属性
         //可以使用这个配置，latest自动重置偏移量为最新的偏移量
