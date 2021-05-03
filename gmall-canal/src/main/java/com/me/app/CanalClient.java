@@ -109,7 +109,8 @@ public class CanalClient {
                 jsonObject.put(column.getName(), column.getValue());
             }
             System.out.println(jsonObject.toString());
-            //使用随机数模拟网络延迟的效果，后面如何测试通过了就可以将延时去掉
+            //使用随机数模拟网络延迟的效果
+            // 如果测试通过了就可以将延时去掉
             try {
                 Thread.sleep(new Random().nextInt(5) * 1000);
             } catch (InterruptedException e) {
