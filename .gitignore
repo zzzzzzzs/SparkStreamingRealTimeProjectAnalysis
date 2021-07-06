@@ -1,4 +1,5 @@
 target/
+*.iml
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -18,7 +19,7 @@ buildNumber.properties
 
 # 同级的.idea
 .idea
-
+.out
 **/.gitignore
 
 
