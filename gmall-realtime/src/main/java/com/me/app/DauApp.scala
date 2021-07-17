@@ -15,7 +15,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.dstream.{DStream, InputDStream}
 
-
+// 日活分析
 object DauApp {
 
     def main(args: Array[String]): Unit = {
