@@ -19,7 +19,8 @@ buildNumber.properties
 
 # 同级的.idea
 .idea
-.out
+out
+data
 **/.gitignore
 
 
