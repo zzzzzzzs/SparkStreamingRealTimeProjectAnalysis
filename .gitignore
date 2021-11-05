@@ -17,10 +17,10 @@ buildNumber.properties
 **/.mvn
 **/target/
 
-# 同级的.idea
-.idea
 out
 data
-**/.gitignore
+**/*.iml
+# .idea
+**/.idea
 
 
